@@ -626,13 +626,8 @@ In this demo, you:
 
 ### 1. Always Enable S3 Bucket Versioning
 
-The course instructor skipped versioning to stay within free tier. In any real project, **always enable versioning**. Without it, accidental state deletion has no recovery path.
+ In any real project, **always enable versioning**. Without it, accidental state deletion has no recovery path.
 
-```bash
-aws s3api put-bucket-versioning \
-  --bucket your-bucket-name \
-  --versioning-configuration Status=Enabled
-```
 
 ### 2. Create a Real Resource Before Demonstrating Migration
 
@@ -647,21 +642,10 @@ With empty state, `terraform init -migrate-state` skips the confirmation prompt 
 On a versioning-enabled bucket:
 - `aws s3 rm <key>` → adds a **delete marker** (object hidden but data remains)
 - `aws s3api delete-object --version-id <id>` → **permanently removes** a specific version
-- To truly empty a versioned bucket → `aws s3 rb --force` (deletes bucket + all versions)
 
 ### 5. Always Define an Explicit `provider` Block
 
 Without it, Terraform uses the AWS CLI default region silently. This works locally but breaks in CI/CD. Make the deploy region explicit in code.
-
-### 6. Never Commit State Files or `.terraform/` to Git
-
-```gitignore
-terraform.tfstate
-terraform.tfstate.backup
-.terraform/
-.terraform.lock.hcl
-*.tfvars
-```
 
 ---
 
@@ -741,7 +725,4 @@ This is expected — Terraform skips the prompt when there is nothing to copy. C
 | `aws s3 rm s3://<bucket>/<key>` | Delete object (adds delete marker if versioning on) |
 | `aws s3 rm s3://<bucket>/ --recursive` | Delete all current objects (adds delete markers if versioning on) |
 | `aws s3 rb s3://<bucket> --force` | Delete bucket and all versions permanently |
-| `aws s3api list-object-versions --bucket <n> --prefix <p>` | List all versions and delete markers for a prefix |
-| `aws s3api delete-object --bucket <n> --key <k> --version-id <v>` | Permanently delete a specific object version |
-| `aws s3api put-bucket-versioning --bucket <n> --versioning-configuration Status=Enabled` | Enable versioning on existing bucket |
 | `aws sts get-caller-identity` | Verify current AWS credentials and account |
