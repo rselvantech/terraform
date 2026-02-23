@@ -192,7 +192,7 @@ Always ensure you are in the **correct region Console** before copying an AMI ID
 > If you switch regions later, repeat these steps to get the correct AMI ID for that region.
 ```
 
-![alt text](image-1.png)
+![alt text](images/image-1.png)
 
 ---
 
