@@ -16,8 +16,8 @@ This demo migrates Terraform state from a local backend to a **remote backend us
 ## Prerequisites
 
 **Required Tools:**
-- ✅ Terraform CLI `>= 1.10` ([Install](https://developer.hashicorp.com/terraform/install))
-- ✅ AWS CLI configured (`aws configure`)
+- ✅ Terraform CLI `>= 1.14.4` 
+- ✅ AWS CLI `>= 2.32.x` configured (`aws configure`)
 - ✅ AWS account with S3 permissions
 
 **Knowledge Requirements:**
@@ -37,6 +37,8 @@ aws sts get-caller-identity
 
 # Verify default region
 aws configure get region
+(or)
+echo $AWS_REGION
 # Expected: us-east-2 (or your chosen region)
 ```
 
@@ -146,6 +148,8 @@ terraform {
 | `dynamodb_table` | DynamoDB locking (legacy — deprecated, avoid for new projects) |
 
 ---
+
+
 
 ### Critical: Two Different `region` Arguments
 
@@ -361,6 +365,22 @@ terraform {
   }
 }
 ```
+
+> **What does `encrypt = true` actually do?**
+>
+> `encrypt = true` enables **server-side encryption (SSE-S3)** — it encrypts the state file
+> **at rest on AWS's storage infrastructure**. It does NOT prevent authorized IAM users from
+> reading the file. If you have `s3:GetObject` permission on the bucket, you can always open
+> and read the `.tfstate` file — AWS decrypts it transparently for you.
+>
+> | What it protects against | What it does NOT protect |
+> |---|---|
+> | Physical access to AWS storage media | IAM users with `s3:GetObject` permission |
+> | AWS compliance requirements (SOC2, HIPAA) | Anyone with valid bucket access credentials |
+>
+> **The real protection for sensitive state data is IAM** — restrict who has `s3:GetObject`
+> on the state bucket using bucket policies and IAM roles. `encrypt = true` is a compliance
+> and defence-in-depth measure, not access control.
 
 ### Step 3: Create `main.tf`
 
