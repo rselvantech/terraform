@@ -58,14 +58,14 @@ Internet
 
 **Required Tools:**
 - ✅ Terraform CLI `>= 1.14.4` 
-- ✅ AWS CLI `>= 2.32.x` configured (`aws configure`)
+- ✅ AWS CLI `>= 2.32.1` configured (`aws configure`)
 - ✅ AWS account with EC2, VPC, and S3 permissions
 
 **Verify Prerequisites:**
 
 ```bash
 terraform version
-# Expected: Terraform v1.10.x or higher
+# Expected: Terraform v1.14.4 or higher
 
 aws sts get-caller-identity
 # Expected: JSON with Account, UserId, Arn
@@ -363,7 +363,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version="~>6.30.0"
     }
   }
 }
@@ -592,37 +592,42 @@ aws ec2 describe-images \
 
 resource "aws_instance" "web" {
   # MANDATORY — no default, Terraform errors without it
+  # Region-specific — must match your deployment region
   ami = "ami-0YOUR_NGINX_AMI_ID"
 
   # MANDATORY — no default, Terraform errors without it
+  # Defines CPU and memory allocated to the instance
   instance_type = "t3.micro"
 
   # OPTIONAL — if omitted, AWS launches into the default subnet
   # of the default VPC in your region
   subnet_id = aws_subnet.public.id
 
-  # OPTIONAL — defaults to false
-  # If omitted, instance has no public IP and is unreachable from internet
+  # OPTIONAL — if omitted, AWS inherits the setting from the subnet's
+  # map_public_ip_on_launch attribute. Custom subnets created via
+  # Terraform default to false — meaning no public IP would be assigned.
+  # Always set this explicitly to avoid relying on subnet defaults.
   associate_public_ip_address = true
 
   # OPTIONAL — if omitted, AWS attaches the default security group
   # of the VPC automatically (allows only internal VPC traffic)
+  # Accepts a list — multiple security groups can be attached
   vpc_security_group_ids = [aws_security_group.public_http.id]
 
   # OPTIONAL block — if omitted entirely, AWS applies these defaults:
-  #   volume_size           = 8 GB
-  #   volume_type           = gp2
+  #   volume_size           = AMI's root volume size (varies per AMI)
+  #   volume_type           = "standard" (magnetic disk — old generation)
   #   delete_on_termination = true
   root_block_device {
     # OPTIONAL — defaults to AMI's root volume size (varies per AMI)
     volume_size = 10
 
-    # OPTIONAL — defaults to gp2 (older generation)
-    # Explicitly setting gp3 gives better performance at same cost
+    # OPTIONAL — defaults to "standard" (magnetic disk — old generation)
+    # Explicitly setting gp3 gives significantly better performance
     volume_type = "gp3"
 
     # OPTIONAL — defaults to true for root volumes
-    # Best practice to explicitly set it to avoid confusion
+    # Best practice to explicitly set it to avoid any confusion
     delete_on_termination = true
   }
 

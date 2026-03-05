@@ -17,7 +17,7 @@ This demo migrates Terraform state from a local backend to a **remote backend us
 
 **Required Tools:**
 - ✅ Terraform CLI `>= 1.14.4` 
-- ✅ AWS CLI `>= 2.32.x` configured (`aws configure`)
+- ✅ AWS CLI `>= 2.32.1` configured (`aws configure`)
 - ✅ AWS account with S3 permissions
 
 **Knowledge Requirements:**
@@ -29,7 +29,7 @@ This demo migrates Terraform state from a local backend to a **remote backend us
 ```bash
 # Verify Terraform version
 terraform version
-# Expected: Terraform v1.10.x or higher
+# Expected: Terraform v1.14.4 or higher
 
 # Verify AWS CLI and credentials
 aws sts get-caller-identity
@@ -123,7 +123,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version = "~>6.30.0"
     }
   }
   backend "s3" {
@@ -353,7 +353,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version = "~>6.30.0"
     }
   }
   backend "s3" {

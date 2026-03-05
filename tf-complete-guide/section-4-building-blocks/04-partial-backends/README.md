@@ -22,7 +22,7 @@ This demo builds directly on [Demo-03](../03-s3-backend/README.md) and explores 
 
 **Required Tools:**
 - ✅ Terraform CLI `>= 1.14.4`
-- ✅ AWS CLI `>= 2.32.x` configured (`aws configure`)
+- ✅ AWS CLI `>= 2.32.1` configured (`aws configure`)
 - ✅ AWS account with S3 permissions
 
 **Verify Prerequisites:**
@@ -30,7 +30,7 @@ This demo builds directly on [Demo-03](../03-s3-backend/README.md) and explores 
 
 ```bash
 terraform version
-# Expected: Terraform v1.10.x or higher
+# Expected: Terraform v1.14.4 or higher
 
 aws sts get-caller-identity
 # Expected: JSON with Account, UserId, Arn
@@ -279,7 +279,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version = "~>6.30.0"
     }
   }
   backend "s3" {

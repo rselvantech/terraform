@@ -21,14 +21,14 @@ This demo dives deeper into **Terraform providers** — how they work, how they 
 
 **Required Tools:**
 - ✅ Terraform CLI `>= 1.14.4`
-- ✅ AWS CLI `>= 2.32.x` configured (`aws configure`)
+- ✅ AWS CLI `>= 2.32.1` configured (`aws configure`)
 - ✅ AWS account with S3 permissions in at least two regions
 
 **Verify Prerequisites:**
 
 ```bash
 terraform version
-# Expected: Terraform v1.10.x or higher
+# Expected: Terraform v1.14.4 or higher
 
 aws sts get-caller-identity
 # Expected: JSON with Account, UserId, Arn
@@ -89,7 +89,7 @@ terraform {
   required_providers {
     aws = {                      # ← "aws" is the local name
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version="5.0"
     }
   }
 }
