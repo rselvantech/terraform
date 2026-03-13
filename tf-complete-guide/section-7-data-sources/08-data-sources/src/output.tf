@@ -25,7 +25,7 @@ output "aws_user_arn" {
 
 output "aws_region_name" {
   description = "Current AWS region name"
-  value       = data.aws_region.current.region # ← was .name, now .region
+  value       = data.aws_region.current.region # ← was .name, now .region, .name deprecated in v6
 }
 
 output "prod_vpc_id" {

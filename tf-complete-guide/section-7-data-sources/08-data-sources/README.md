@@ -419,8 +419,6 @@ ami_us_east_1 = "ami-0bbb..."   ← us-east-1 AMI ID (different)
 This confirms AMI IDs are region-specific — the same Ubuntu 24.04 image has
 a different ID in every AWS region.
 
-> After verifying, remove the multi-region block and revert to the single
-> `aws_ami.ubuntu` data source to keep the config clean for the next parts.
 
 ---
 
